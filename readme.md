@@ -105,7 +105,7 @@ https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/eve
 |4776| events with Error Code C000006A (the password is invalid) followed by an Error Code C0000234 (the account is locked out) may be indicative of a failed password guessing attack (or a user who has simply forgotten the account password). Similarly, a series of failed 4776 events followed by a successful 4776 event may show a successful password guessing attack. The presence of Event ID 4776 on a member server or client is indicative of a user attempting to authenticate to a local account on that system and may in and of itself be cause for further investigation.|
 
 
-## Common Event ID 4776 error code descriptions Error Code 0xC0000064
+## Common Event ID 4776 
 
 |Error Code| Meaning|
 | ------------- | ------------- |
