@@ -270,6 +270,7 @@ Since Windows 8/Server 2012, additional logging can also be enabled in the Group
 When audit policy changes, it impacts the evidence available to investigators and incident handlers, whether the change was done maliciously by an attacker or legitimately by an administrator. Fortunately, modern Windows systems do a good job of logging these changes when they occur. The Event ID used for this auditing is 4719: 
 
 • 4719 – System audit policy was changed. The Audit Policy Change section will list the specific changes that were made to the audit policy. The Subject section of the event description may show the account that made the change, but often (such as when the change is made through Group Policy) this section simply reports the name of the local system. Unfortunately, auditing Directory Services access is one area where Windows is still less than clear. You can find additional information here and here, and there are a number of third-party tools that provide additional visibility and accountability in modifications to Group Policy Objects.
+
 • 1102 - Regardless of the settings in the audit policy, if the Security event log is cleared, Event ID 1102 will be recorded as the first entry in the new, blank log. You can tell the name of the user account that cleared the log in the details of the entry. A similar event, with ID 104, is generated in the System log if it is cleared.
 
 ## Auditing Windows Services 
@@ -277,10 +278,15 @@ Many attacks rely on Windows services either for executing commands remotely or 
 systems. While most of the events we have mentioned so far have been found in the Security Event Log, Windows records events related to starting and stopping of services in the System Event Log. The following events are often noteworthy: 
 
 • 6005 – The event log service was started. This will occur at system boot time, and whenever the system is manually started. Since the event log service is critical for security, it gets is own Event ID.
+
 • 6006 – The event log service was stopped. While this obviously occurs at system shutdown or restart, its occurrence at other times may be indicative of malicious attempts to avoid logging of activity or to modify the logs.
+
 • 7034 – A service terminated unexpectedly. The event description will display the name of the services and may display the number of times that this service has crashed.
+
 • 7036 – A service was stopped or started. While the event log service has its own Event ID, other services are logged under the same Event ID. The event description provides the name of the service, but no details of which user account requested the service to stop is provided. The description will indicate that the service entered the running state when it is started or entered the stopped state when it is stopped.
+
 • 7040- The start type for a service was changed. The event description will display the name of the service that was changed and describe the change that was made.
+
 • 7045 – A service was installed by the system. The name of the service is found in the Service Name field of the event description, and the full path to the associated executable is found in the Service File Name field. This can be a particularly important event as many tools, such as psexec, create a service on the remote system to execute commands. Many of these tools will create a randomly named service (which stands out in the logs as highly unusual) or will run an executable from locations like the Temp folder. It is worth noting that some legitimate services, like Windows Defender, may also use names that look in part randomized, so it is worth examining any odd entries carefully to determine if they are malicious.
 
 If you have ***enabled Advanced Audit Policy Configuration \> System Audit Policies \> System \> Audit Security System Extension*** in your GPOs, Windows 10 and Server 2016/2019 systems will also record Event ID 4697
@@ -389,15 +395,25 @@ Another option to enhance visibility into processes that run on systems in your 
 Microsoft continues to increase the amount of logs available surrounding PowerShell to help combat its nefarious use. Once again, these logging facilities must be enabled via Group Policy, specifically at ***Computer Configuration -\> Policies -\> Administrative Templates -\> Windows Components -\> Windows PowerShell.*** There are three basic categories of logging that may be available, depending on the version of Windows in question. 
 
 • Module Logging
+
      o Logs pipeline execution events;
+     
      o Logs to event logs.
+     
 • Script Block Logging
+
      o Captures de-obfuscated commands sent to PowerShell;
+     
      o Captures the commands only, not the resulting output;
+     
      o Logs to event logs.
+     
 • Transcription
+
      o Captures PowerShell input and output;
+     
      o Will not capture output of outside programs that are run, only PowerShell;
+     
      o Logs to text files in user specified location.
 
 Once enabled, these logs can provide a wealth of information concerning the use of PowerShell on your systems. If you routinely run lots of PowerShell scripts, this can produce a large volume of data, so be sure to test and tune the audit facilities to strike a balance between visibility and load before deploying such changes in production. 
