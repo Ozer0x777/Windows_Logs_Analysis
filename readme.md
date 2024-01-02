@@ -1,4 +1,4 @@
-##Introduction 
+## Introduction 
 
 Microsoft has gradually increased the efficiency and
 effectiveness of its auditing facilities over the years. Modern Windows systems can log vast amounts of information with minimal system impact. With the corresponding decrease in the price of storage media, excuses to not enable and retain these critical pieces of evidence simply don't stand up to scrutiny. Configuring adequate logging on Windows systems,
@@ -6,7 +6,7 @@ and ideally aggregating those logs into a SIEM or other log aggregator, is a cri
 
 This document provides an overview of some of the most important Windows logs and the events that are recorded there. As with all of our Analyst Reference documents, this PDF is intended to provide more detail than a cheat sheet while still being short enough to serve as a quick reference. The PDF also contains links to external resources for further reference.
 
-##Event Log Format 
+## Event Log Format 
 
 Modern Windows systems store logs in the ***%SystemRoot%`\System32\winevt\logs*** directory by default in the binary XML Windows Event Logging format, designated by the .evtx extension. Logs can also be stored remotely using log subscriptions. For remote logging, a remote system running the Windows Event Collector service subscribes to subscriptions of logs produced by other systems. The types of logs to be collected can be specified at a granular level and transport occurs over HTTPS on port 5986 using WinRM. GPO's can be used to configure the remote logging facilities on each computer. 
 
@@ -35,7 +35,7 @@ logging the event, not the source of the connection).
 logged is recorded. This is often the most significant field for the
 analyst.
 
-##Account Management Events
+## Account Management Events
 
 The following events will be recorded on the system where the account was created or modified, which will be the local system for a local account or a domain controller for a domain
 
@@ -69,7 +69,7 @@ The following events will be recorded on the system where the account was create
 |4798|A user’s local group membership was enumerated. Large numbers of these events may be indicative of adversary account enumeration.|
 |4799|A security-enabled local group membership was enumerated. Large numbers of these events may be indicative of adversary group enumeration.|
 
-##Account Logon and Logon Events 
+## Account Logon and Logon Events 
 
 Account Logon is the Microsoft term for authentication. Logon is the term used to refer to an account gaining access to a resource. Both Account Logon and Logon events will be recorded in the Security event log. Authentication (account logon) of domain accounts is performed by a domain controller within a Windows network. Local accounts (those that exist within a local SAM file rather than as a part of Active Directory) are authenticated by the local system where they exist. Account logon events will be logged by the system that performs the authentication. Auditing of Account Logon and Logon events is easily set by Group Policy. While Microsoft continues to enable more logging by default as new versions of Windows are released, administrators should review their audit policies on a regular basis to ensure that all systems are generating adequate logs. The ability to store event logs on remote systems (either using the native Microsoft remote logging features or third-party SIEM or other tools) helps safeguard logs from alteration or destruction. 
 
